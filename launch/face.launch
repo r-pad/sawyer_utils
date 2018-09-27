@@ -1,0 +1,3 @@
+<launch>
+    <node pkg="intera_examples" type="head_display_image.py" name="head_display_image" args="-f $(find sawyer_utils)/imgs/thing_one_sawyer.jpg" output="log"/>
+</launch>

@@ -1,0 +1,3 @@
+rosrun intera_interface enable_robot.py -d
+rosrun intera_interface enable_robot.py -r
+rosrun intera_interface enable_robot.py -e
