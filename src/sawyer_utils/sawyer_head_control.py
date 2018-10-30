@@ -5,6 +5,7 @@ Created on Sun Apr 29 14:05:28 2018
 @author: bokorn
 """
 
+import numpy as np
 import intera_interface
 
 HEAD_LIMITS = [-5.1, 0.9]
