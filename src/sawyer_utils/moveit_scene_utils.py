@@ -82,11 +82,16 @@ def initTableScene(scene, table_shape = [0.7, 1.6], table_height = -0.17):
     scene.add_box('wall_sr', wall_sr_pose, wall_s_size)
     rospy.sleep(0.1)
 
-gripper_standoff = 0.02
-
 def addGripperObject(scene, object_size = None, object_center = None, object_quat = None, 
-                     object_name = 'object', clear_gripper=True):
+                     object_name = 'object', clear_gripper=True, gripper_frame='right_gripper'):
     time_stamp = rospy.get_rostime()
+    if(gripper_frame=='right_gripper'):
+        gripper_standoff = 0.02
+    elif(gripper_frame=='right_hand'):
+        gripper_standoff= 0.04
+    else:
+        gripper_standoff= 0.0
+
     if(object_size is None):
         object_size = [.05, .09, .09]
     if(object_center is None):
@@ -95,7 +100,7 @@ def addGripperObject(scene, object_size = None, object_center = None, object_qua
         object_quat = [0,0,0,1]
         
     obj_pose = PoseStamped()
-    obj_pose.header.frame_id = 'right_gripper'
+    obj_pose.header.frame_id = gripper_frame
     obj_pose.header.stamp = time_stamp
 
     obj_pose.pose.orientation.x = object_quat[0]
@@ -108,13 +113,13 @@ def addGripperObject(scene, object_size = None, object_center = None, object_qua
     obj_pose.pose.position.z = object_center[2]
     
     if(clear_gripper):
-        clearGripper(scene)
-    scene.attach_box('right_gripper', object_name, obj_pose, object_size)
+        clearGripper(scene, gripper_frame=gripper_frame)
+    scene.attach_box(gripper_frame, object_name, obj_pose, object_size)
     rospy.sleep(0.1)
     
-def clearGripper(scene):
+def clearGripper(scene, gripper_frame = 'right_gripper'):
     objects = scene.get_attached_objects()
-    scene.remove_attached_object('right_gripper')
+    scene.remove_attached_object(gripper_frame)
     for obj in objects.keys():
         scene.remove_world_object(obj)
         
