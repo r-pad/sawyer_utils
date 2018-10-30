@@ -7,7 +7,6 @@ import rospy
 import moveit_commander
 import intera_interface
 
-HEAD_LIMITS = [-5.1, 0.9]
 
 class SawyerJointControl(object):
     def __init__(self, scene = None):
@@ -20,25 +19,6 @@ class SawyerJointControl(object):
         self.group = moveit_commander.MoveGroupCommander("right_arm")
         self.limb = intera_interface.Limb('right')
         self.joints = self.limb.joint_names()
-        self.head = intera_interface.Head()
-
-    def _wrap_head_angle(self, theta):
-        if theta > HEAD_LIMITS[1]:
-            theta -= 2.0*np.pi
-        if theta < HEAD_LIMITS[0]:
-            if(self.head.pan() > sum(HEAD_LIMITS)/2.):
-                theta = HEAD_LIMITS[1]
-            else:
-                theta = HEAD_LIMITS[0]
-        return theta
-
-    def move_head(self, delta):
-        theta = self.head.pan()
-        theta += delta 
-        self.head.set_pan(self._wrap_head_angle(theta))
-
-    def set_head(self, theta):
-        self.head.set_pan(self._wrap_head_angle(theta)) 
 
     def move_joint(self, joint_idx, delta):
         joint_name = self.joints[joint_idx]
