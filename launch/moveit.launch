@@ -12,8 +12,7 @@
   <!-- Left and electric gripper arg. Set to true to check for collisions for their links -->
   <arg name="electric_gripper" default="true"/>
   <!-- Set the kinematic tip for the right_arm move_group -->
-  <arg name="tip_name"     if="$(arg electric_gripper)" default="right_gripper"/>
-  <arg name="tip_name" unless="$(arg electric_gripper)" default="right_hand"/>
+  <arg name="tip_name" default="right_hand"/>
   
   <node pkg="intera_interface" type="joint_trajectory_action_server.py" name="joint_trajectory_action_server" output="log">
     </node>
