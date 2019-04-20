@@ -9,7 +9,7 @@ import sys
 import rospy
 import moveit_commander
 import moveit_msgs.msg
-from geometry_msgs.msg import PoseStamped
+from geometry_msgs.msg import PoseStamped, geometry_msgs
 import intera_interface
 import numpy as np
 from sawyer_utils.sawyer_joint_control import SawyerJointControl
@@ -17,8 +17,6 @@ import sawyer_utils.moveit_scene_utils as scene_utils
 import tf.transformations as trans
 
 base_standoff = 0.2
-sensor_standoff_z = 0.1
-sensor_standoff_y = 0.2
 
 def initScene(scene, table_shape = [0.7, 1.6], table_height = -0.17):
     scene.remove_world_object()
@@ -37,12 +35,12 @@ def initScene(scene, table_shape = [0.7, 1.6], table_height = -0.17):
 
     ceiling_size = [table_size[1], table_size[0], table_size[2]]
     ceiling_pose = PoseStamped()
-    ceiling_pose.header.frame_id = 'primesense'
+    ceiling_pose.header.frame_id = 'base'
     ceiling_pose.header.stamp = time_stamp
     ceiling_pose.pose.orientation.w = 1.0
-    ceiling_pose.pose.position.x = 0.0
-    ceiling_pose.pose.position.y = sensor_standoff_y
-    ceiling_pose.pose.position.z = sensor_standoff_z
+    ceiling_pose.pose.position.x = table_center[0]
+    ceiling_pose.pose.position.y = table_center[0]
+    ceiling_pose.pose.position.z = table_center[0] + 1.0
 
     wall_height = 2.0
     wall_b_angle = -0.40970294454245623
@@ -96,36 +94,34 @@ def initScene(scene, table_shape = [0.7, 1.6], table_height = -0.17):
     wall_f_pose.pose.position.y = 0.0
     wall_f_pose.pose.position.z = wall_height/2.0 + table_center[2]
 
-    rospy.sleep(0.2)
-    # scene.add_box('table', table_pose, table_size)
+    scene.add_box('table', table_pose, table_size)
     scene.add_box('ceiling', ceiling_pose, ceiling_size)
     # scene.add_box('wall_f', wall_f_pose, wall_f_size)
     # scene.add_box('wall_bl', wall_bl_pose, wall_b_size)
-    # scene.add_box('wall_br', wall_br_pose, wall_b_size)    
+    scene.add_box('wall_br', wall_br_pose, wall_b_size)
     # scene.add_box('wall_sl', wall_sl_pose, wall_s_size)
     # scene.add_box('wall_sr', wall_sr_pose, wall_s_size)
-    rospy.sleep(0.1)
 
 try:
     rospy.init_node("scene_geometry")
     scene = moveit_commander.PlanningSceneInterface()
-    
-    sawyer = SawyerJointControl(scene)
+    rospy.sleep(0.5) # planning scene needs time to setup
+
     initScene(scene, 
                 table_shape=[1.0, 1.6],
                 table_height=-0.21)
 
     # scene_utils.addGripperObject(scene, 
-    #                              object_size=[.05,.05,.12], 
-    #                              gripper_frame = 'right_hand')
+                                #  object_size=[.05,.05,.12], 
+                                #  gripper_frame = 'right_hand')
     
-    scene_utils.addGripperObject(scene, 
-                                 object_size=[.19,.19,.1], 
-                                 object_center= [0.0,0.0,.31], 
-                                 object_name='realsense', 
-                                 gripper_frame='head')
+    # scene_utils.addGripperObject(scene, 
+    #                              object_size=[.19,.19,.1], 
+    #                              object_center= [0.0,0.0,.31], 
+    #                              object_name='realsense', 
+    #                              gripper_frame='head')
 
     
-    import IPython; IPython.embed()
+    # import IPython; IPython.embed()
 except rospy.ROSInterruptException:
     pass
