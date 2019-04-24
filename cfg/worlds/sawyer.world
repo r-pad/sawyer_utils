@@ -10,7 +10,8 @@
     </include>
 
     <include>
-      <pose>1 0 1.75 0 1.57 0</pose>
+      <!-- <pose>0.7933 0.0766 0.7655 0.70738 -0.70679 0.00137 0.00847</pose> -->
+      <pose>0.7933 0.0766 1.6955 -0.01 1.570 0.014</pose>
       <uri>model://asus_xtion_pro_camera</uri>
     </include>
 

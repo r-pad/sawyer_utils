@@ -33,23 +33,29 @@ def initScene(scene, table_shape = [0.7, 1.6], table_height = -0.17):
     table_pose.pose.position.z = table_center[2]
     table_size =  tuple(table_shape) + (0.0, )
 
-    ceiling_size = [table_size[1], table_size[0], table_size[2]]
+    ceiling_size = [1.0, 0.3, 0.1]
     ceiling_pose = PoseStamped()
     ceiling_pose.header.frame_id = 'base'
     ceiling_pose.header.stamp = time_stamp
-    ceiling_pose.pose.orientation.w = 1.0
-    ceiling_pose.pose.position.x = table_center[0]
-    ceiling_pose.pose.position.y = table_center[0]
-    ceiling_pose.pose.position.z = table_center[0] + 1.0
+    ceiling_quat = trans.quaternion_about_axis(0.4, (0,0,1))
+    ceiling_pose.pose.orientation.x = ceiling_quat[0]
+    ceiling_pose.pose.orientation.y = ceiling_quat[1]
+    ceiling_pose.pose.orientation.z = ceiling_quat[2]
+    ceiling_pose.pose.orientation.w = ceiling_quat[3]
+    ceiling_pose.pose.position.x = table_center[0] - 0.2
+    ceiling_pose.pose.position.y = 0
+    ceiling_pose.pose.position.z = 0.75
 
     wall_height = 2.0
-    wall_b_angle = -0.40970294454245623
+    wall_bl_angle = -0.40970294454245623
+    wall_br_angle = 0
     
-    wall_b_size = (0.0, 1.05, wall_height)
+    wall_br_size = (0.3, 0.5, wall_height)
+    wall_bl_size = (0.0, 1.05, wall_height)
     wall_bl_pose = PoseStamped()
     wall_bl_pose.header.frame_id = 'base'
     wall_bl_pose.header.stamp = time_stamp
-    wall_bl_quat = trans.quaternion_about_axis(wall_b_angle, (0,0,1))
+    wall_bl_quat = trans.quaternion_about_axis(wall_bl_angle, (0,0,1))
     wall_bl_pose.pose.orientation.x = wall_bl_quat[0]
     wall_bl_pose.pose.orientation.y = wall_bl_quat[1]
     wall_bl_pose.pose.orientation.z = wall_bl_quat[2]
@@ -60,14 +66,14 @@ def initScene(scene, table_shape = [0.7, 1.6], table_height = -0.17):
     wall_br_pose = PoseStamped()
     wall_br_pose.header.frame_id = 'base'
     wall_br_pose.header.stamp = time_stamp
-    wall_br_quat = trans.quaternion_about_axis(-wall_b_angle, (0,0,1))
+    wall_br_quat = trans.quaternion_about_axis(-wall_br_angle, (0,0,1))
     wall_br_pose.pose.orientation.x = wall_br_quat[0]
     wall_br_pose.pose.orientation.y = wall_br_quat[1]
     wall_br_pose.pose.orientation.z = wall_br_quat[2]
     wall_br_pose.pose.orientation.w = wall_br_quat[3]
     wall_br_pose.pose.position.x = 0.0
     wall_br_pose.pose.position.y = -0.5
-    wall_br_pose.pose.position.z = wall_height/2.0 + table_center[2]
+    wall_br_pose.pose.position.z = 0
     
     wall_s_size = (table_size[0], 0.0, wall_height)
     wall_sl_pose = PoseStamped()
@@ -94,11 +100,11 @@ def initScene(scene, table_shape = [0.7, 1.6], table_height = -0.17):
     wall_f_pose.pose.position.y = 0.0
     wall_f_pose.pose.position.z = wall_height/2.0 + table_center[2]
 
-    scene.add_box('table', table_pose, table_size)
+    # scene.add_box('table', table_pose, table_size)
     scene.add_box('ceiling', ceiling_pose, ceiling_size)
     # scene.add_box('wall_f', wall_f_pose, wall_f_size)
-    # scene.add_box('wall_bl', wall_bl_pose, wall_b_size)
-    scene.add_box('wall_br', wall_br_pose, wall_b_size)
+    scene.add_box('wall_bl', wall_bl_pose, wall_bl_size)
+    scene.add_box('wall_br', wall_br_pose, wall_br_size)
     # scene.add_box('wall_sl', wall_sl_pose, wall_s_size)
     # scene.add_box('wall_sr', wall_sr_pose, wall_s_size)
 
