@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<launch>
+  <include file="$(find sawyer_moveit_config)/launch/sawyer_moveit.launch">
+    <arg name="rviz_config" value="$(find sawyer_utils)/cfg/moveit_sim.rviz" />
+    <arg name="electric_gripper" value="true" />
+  </include>
+
+  <node pkg="sawyer_utils" type="init_scene_geometry.py" name="scene_geometry" />
+</launch>
